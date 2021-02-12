@@ -2,6 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+ссылка на опубликованый проект в github pages: http://Evil0n.github.io/nevatrip_testcase
 First, run the development server:
 
 ```bash
