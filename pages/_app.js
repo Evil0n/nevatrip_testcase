@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }) {
       </Breadcrumb>
       <Component {...pageProps} />
     </Content>
-    <Footer style={{ textAlign: 'center' }}>EvilOn ©2021</Footer>
+    <Footer style={{ textAlign: 'center' }}>Evil0n ©2021</Footer>
   </Layout>)
 }
 
