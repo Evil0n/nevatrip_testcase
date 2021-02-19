@@ -38,6 +38,19 @@ const time = {
   ],
 }
 
+const offset = new Date().getTimezoneOffset()
+const withTimezoneOffset =
+  (option) => {
+    const time = moment()
+    time.set({hour: 0, minute: 0, second: 0, millisecond: 0})
+    time.add(option.value - offset - 180, 'minutes')
+    option.label = time.format('HH:mm')
+    return option
+  }
+
+time._to.map(withTimezoneOffset)
+time._back.map(withTimezoneOffset)
+
 const formInitial = {
   direction: '_to',
   time: {
@@ -52,14 +65,12 @@ export default function Index () {
   const [to, setTo] = useState(formInitial.time._to)
   const [back, setBack] = useState(formInitial.time._back)
 
-  const getToStyle = useMemo(() => {
-    const isVisible = direction === '_to' || direction === '_toAndBack'
-    return {display: isVisible ? 'inline-block' : 'none'}
+  const isVisibleTo = useMemo(() => {
+    return direction === '_to' || direction === '_toAndBack'
   }, [direction])
 
-  const getBackStyle = useMemo(() => {
-    const isVisible = direction === '_back' || direction === '_toAndBack'
-    return {display: isVisible ? 'inline-block' : 'none'}
+  const isVisibleBack = useMemo(() => {
+    return direction === '_back' || direction === '_toAndBack'
   }, [direction])
 
   const handleChange = useCallback((changedValues) => {
@@ -89,10 +100,10 @@ export default function Index () {
     timeToAndBack.add(values.time._back - values.time._to + 50, 'minutes')
     const departureTo = moment()
     departureTo.set({hour: 0, minute: 0, second: 0, millisecond: 0})
-    departureTo.add(values.time._to, 'minutes')
+    departureTo.add(values.time._to - offset - 180, 'minutes')
     const departureBack = moment()
     departureBack.set({hour: 0, minute: 0, second: 0, millisecond: 0})
-    departureBack.add(values.time._back, 'minutes')
+    departureBack.add(values.time._back - offset - 180, 'minutes')
 
     const msgTo = (where, departure, isNeedToRender) => {
       if (!isNeedToRender) { return }
@@ -100,9 +111,14 @@ export default function Index () {
         'HH-mm')}, а прибудет в ${departure.add(50, 'minutes').
         format('HH-mm')}.`
     }
+    const directionPoints = {
+      _to:'А в Б',
+      _back:'Б в А',
+      _toAndBack:'А в Б и обратно в А'
+    }
 
     Modal.success({
-      title: `Вы выбрали ${values.count} бил. по маршруту из A в B стоимостью ${prices[values.direction] *
+      title: `Вы выбрали ${values.count} бил. по маршруту из ${directionPoints[values.direction]} стоимостью ${prices[values.direction] *
       values.count}р.`,
       content: (<>
         Это путешествие займет у вас {values.direction === '_toAndBack'
@@ -112,8 +128,8 @@ export default function Index () {
           ['_toAndBack', '_to'].includes(values.direction))} <br/>
         {msgTo('в сторону Б', departureBack,
           ['_toAndBack', '_back'].includes(values.direction))} <br/>
-        <div style={{color: 'red'}}>!! Внимание время указано в Московском
-          часовом поясе (+3 GMT)
+        <div style={{color: 'red'}}>!! Внимание!! Время указано в соответствии с
+          часовым поясом {moment().format('Z')} GMT
         </div>
       </>),
     })
@@ -139,7 +155,7 @@ export default function Index () {
     </Item>
     <Item label="Время">
       <Group compact>
-        <Item name={['time', '_to']} label="Туда" style={getToStyle}>
+        <Item name={['time', '_to']} label="Туда" hidden={!isVisibleTo}>
           <Select>
             {time._to.map(direction => (
               <Option key={'timeTo' + direction.value}
@@ -147,7 +163,7 @@ export default function Index () {
             ))}
           </Select>
         </Item>
-        <Item name={['time', '_back']} label="Обратно" style={getBackStyle}>
+        <Item name={['time', '_back']} label="Обратно" hidden={!isVisibleBack}>
           <Select>
             {time._back.map(directionOption => (
               <Option

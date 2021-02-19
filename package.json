@@ -12,6 +12,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@mdx-js/loader": "^1.6.22",
+    "@next/mdx": "^10.0.7",
     "antd": "^4.12.2",
     "moment": "^2.29.1",
     "next": "10.0.6",

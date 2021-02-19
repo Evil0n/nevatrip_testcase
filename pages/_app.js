@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
     </Header>
     <Head>
       <title>Тестовые задания</title>
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/nevatrip_testcase/favicon.ico" />
     </Head>
     <Content style={{ padding: '0 50px' }}>
       <Breadcrumb style={{ margin: '16px 0' }}>

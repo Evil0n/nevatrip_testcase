@@ -42,8 +42,8 @@ const priceSource = [
     created_at: '12.02.2021',
   },
   {
-    key: 5,
-    id: '5',
+    key: 6,
+    id: '6',
     type: 'групповой',
     price: '600',
     status: 'активна',
